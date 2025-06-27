@@ -1,0 +1,35 @@
+// Test script to verify doctor profile loading issue
+console.log('🔍 TESTING DOCTOR PROFILE LOADING')
+console.log('==================================')
+
+console.log('')
+console.log('🧪 Manual API Test Steps:')
+console.log('1. Open browser dev tools')
+console.log('2. Login as doctor: john.smith@email.com / password123')
+console.log('3. Navigate to: /doctor/schedule')
+console.log('4. Check Network tab for API calls:')
+console.log('   - /api/user/[userId] (should return user with doctor data)')
+console.log('   - /api/doctor/[doctorId]/dashboard (should return doctor info)')
+console.log('')
+
+console.log('🔧 Expected API Flow:')
+console.log('   Step 1: GET /api/user/[userId]')
+console.log('   Response: { user: { id, email, role, doctor: { id, firstName, ... } } }')
+console.log('')
+console.log('   Step 2: GET /api/doctor/[doctorId]/dashboard')
+console.log('   Response: { doctor: { id, firstName, lastName, specialization, ... } }')
+console.log('')
+
+console.log('❌ If it fails:')
+console.log('   - Check if user exists in database')
+console.log('   - Check if doctor record is linked to user')
+console.log('   - Check authentication token')
+console.log('   - Check API route responses in Network tab')
+console.log('')
+
+console.log('🛠️  Quick Database Check:')
+console.log('   Run: node check-doctors.js')
+console.log('   Verify: Doctor records exist and are linked to users')
+console.log('')
+
+console.log('🎯 The error should now show debug info to help identify the issue!')

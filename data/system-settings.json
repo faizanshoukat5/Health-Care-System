@@ -1,0 +1,37 @@
+{
+  "general": {
+    "platformName": "Healthcare Management Platform",
+    "supportEmail": "support@healthcare.com",
+    "supportPhone": "+1-555-0123",
+    "maintenanceMode": false,
+    "allowRegistration": true,
+    "maxAppointmentsPerDay": 50,
+    "appointmentDuration": 30,
+    "advanceBookingDays": 30
+  },
+  "notifications": {
+    "emailEnabled": true,
+    "smsEnabled": false,
+    "pushEnabled": true,
+    "appointmentReminders": true,
+    "reminderHours": 24,
+    "systemNotifications": true
+  },
+  "security": {
+    "passwordMinLength": 8,
+    "requireUppercase": true,
+    "requireNumbers": true,
+    "requireSpecialChars": false,
+    "sessionTimeout": 480,
+    "maxLoginAttempts": 5,
+    "enableTwoFactor": false
+  },
+  "integrations": {
+    "twilioEnabled": false,
+    "twilioAccountSid": "",
+    "twilioAuthToken": "",
+    "sendgridEnabled": false,
+    "sendgridApiKey": "",
+    "googleMapsApiKey": ""
+  }
+}

@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  admin     Admin?
+  doctor    Doctor?
+  patient   Patient?
+
+  @@map("users")
+}
+
+model Patient {
+  id               String          @id @default(cuid())
+  userId           String          @unique
+  firstName        String
+  lastName         String
+  dateOfBirth      DateTime
+  gender           String
+  phoneNumber      String
+  address          Json
+  emergencyContact Json
+  insuranceInfo    Json?
+  medicalHistory   Json?
+  allergies        String?
+  medications      String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  appointments     Appointment[]
+  medicalRecords   MedicalRecord[]
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prescriptions    Prescription[]
+  vitals           VitalSigns[]
+
+  @@map("patients")
+}
+
+model Doctor {
+  id              String          @id @default(cuid())
+  userId          String          @unique
+  firstName       String
+  lastName        String
+  specialization  String
+  licenseNumber   String          @unique
+  phoneNumber     String
+  qualifications  Json
+  experience      Int
+  consultationFee Decimal
+  availability    Json
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  appointments    Appointment[]
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medicalRecords  MedicalRecord[]
+  prescriptions   Prescription[]
+
+  @@map("doctors")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  firstName String
+  lastName  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admins")
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  patientId   String
+  doctorId    String
+  dateTime    DateTime
+  duration    Int      @default(30)
+  type        String
+  status      String   @default("SCHEDULED")
+  reason      String
+  notes       String?
+  meetingLink String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  patient     Patient  @relation(fields: [patientId], references: [id])
+
+  @@map("appointments")
+}
+
+model MedicalRecord {
+  id              String   @id @default(cuid())
+  patientId       String
+  doctorId        String
+  appointmentDate DateTime
+  diagnosis       String
+  symptoms        String?
+  treatment       String
+  vitals          Json
+  labResults      Json?
+  attachments     String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  doctor          Doctor   @relation(fields: [doctorId], references: [id])
+  patient         Patient  @relation(fields: [patientId], references: [id])
+
+  @@map("medical_records")
+}
+
+model Prescription {
+  id           String   @id @default(cuid())
+  patientId    String
+  doctorId     String
+  medications  Json
+  dosage       String
+  frequency    String
+  duration     String
+  instructions String
+  status       String   @default("ACTIVE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  doctor       Doctor   @relation(fields: [doctorId], references: [id])
+  patient      Patient  @relation(fields: [patientId], references: [id])
+
+  @@map("prescriptions")
+}
+
+model VitalSigns {
+  id               String   @id @default(cuid())
+  patientId        String
+  bloodPressure    Json
+  heartRate        Int?
+  temperature      Float?
+  weight           Float?
+  height           Float?
+  oxygenSaturation Int?
+  bloodSugar       Float?
+  recordedAt       DateTime @default(now())
+  recordedBy       String?
+  createdAt        DateTime @default(now())
+  patient          Patient  @relation(fields: [patientId], references: [id])
+
+  @@map("vital_signs")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  data      Json?
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
